@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#071b2a" />
+  <meta name="description" content="A small pocket of calm, made especially for Airin." />
+  <title>Airin, you’re going to be okay</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23071b2a'/%3E%3Cpath d='M32 50S12 39 12 24c0-8 10-12 20-2 10-10 20-6 20 2 0 15-20 26-20 26Z' fill='%23ff91a8'/%3E%3Ccircle cx='49' cy='14' r='4' fill='%23ffe189'/%3E%3C/svg%3E" />
+  <style>
+    :root {
+      --night: #071b2a;
+      --night-2: #0b2b3c;
+      --cream: #fff9ef;
+      --white: #ffffff;
+      --ink: #102735;
+      --muted: #526973;
+      --pink: #ff91a8;
+      --pink-deep: #e85f7f;
+      --mint: #b9edb4;
+      --leaf: #4f965f;
+      --sun: #ffe189;
+      --line: rgba(16, 39, 53, .12);
+      --shadow: 0 22px 70px rgba(0, 10, 20, .24);
+      --radius: 30px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--cream);
+      background:
+        radial-gradient(circle at 12% 12%, rgba(255, 145, 168, .17), transparent 28rem),
+        radial-gradient(circle at 88% 24%, rgba(185, 237, 180, .14), transparent 26rem),
+        linear-gradient(145deg, var(--night) 0%, #061521 56%, #0c2430 100%);
+      font-family: Inter, ui-rounded, "Segoe UI", system-ui, sans-serif;
+      overflow-x: hidden;
+    }
+
+    button { font: inherit; }
+    button:focus-visible { outline: 3px solid var(--sun); outline-offset: 4px; }
+
+    .grain,
+    .stars { position: fixed; inset: 0; pointer-events: none; }
+    .grain {
+      opacity: .055;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
+      z-index: 20;
+    }
+    .stars { z-index: -1; }
+    .star {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--sun);
+      box-shadow: 0 0 14px rgba(255, 225, 137, .9);
+      animation: twinkle 3.4s ease-in-out infinite;
+    }
+    .star:nth-child(2n) { background: var(--mint); animation-delay: -1.3s; }
+    .star:nth-child(3n) { width: 2px; height: 2px; animation-delay: -2.1s; }
+
+    main { width: min(1160px, calc(100% - 32px)); margin: 0 auto; }
+
+    .hero {
+      min-height: 100svh;
+      display: grid;
+      grid-template-columns: 1.08fr .92fr;
+      align-items: center;
+      gap: clamp(30px, 7vw, 96px);
+      padding: 64px 0 48px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 22px;
+      font-size: .82rem;
+      font-weight: 800;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--mint);
+    }
+    .eyebrow::before { content: ""; width: 28px; height: 2px; background: currentColor; }
+
+    h1 {
+      max-width: 800px;
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(3.4rem, 8vw, 7.6rem);
+      font-weight: 500;
+      line-height: .87;
+      letter-spacing: -.065em;
+    }
+    h1 .soft { color: var(--pink); font-style: italic; }
+    .lede {
+      max-width: 620px;
+      margin: 32px 0 0;
+      font-size: clamp(1.08rem, 2.3vw, 1.35rem);
+      line-height: 1.65;
+      color: rgba(255, 249, 239, .78);
+    }
+
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+    .primary,
+    .ghost,
+    .note-tab {
+      border: 0;
+      cursor: pointer;
+      transition: transform .22s ease, background .22s ease, color .22s ease, box-shadow .22s ease;
+    }
+    .primary {
+      min-height: 54px;
+      padding: 0 22px;
+      border-radius: 999px;
+      background: var(--pink);
+      color: #31131c;
+      font-weight: 850;
+      box-shadow: 0 10px 30px rgba(255, 145, 168, .25);
+    }
+    .ghost {
+      min-height: 54px;
+      padding: 0 22px;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      color: var(--cream);
+      font-weight: 750;
+      backdrop-filter: blur(12px);
+    }
+    .primary:hover, .ghost:hover, .note-tab:hover { transform: translateY(-3px); }
+
+    .scene { position: relative; min-height: 620px; display: grid; place-items: center; }
+    .moon {
+      position: absolute;
+      width: min(460px, 84vw);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle at 34% 29%, #fff 0 4%, #fff2c7 20%, #ffdca1 52%, #ffb79c 100%);
+      box-shadow: 0 0 110px rgba(255, 190, 154, .28);
+      animation: float 6s ease-in-out infinite;
+    }
+    .hero-bunny {
+      position: relative;
+      z-index: 2;
+      width: min(430px, 82vw);
+      max-height: 560px;
+      object-fit: contain;
+      filter: drop-shadow(0 28px 30px rgba(0,0,0,.24));
+      animation: bunnyFloat 5.2s ease-in-out infinite;
+    }
+    .orbit-note {
+      position: absolute;
+      z-index: 4;
+      right: 0;
+      bottom: 90px;
+      width: 178px;
+      padding: 16px 18px;
+      border: 1px solid rgba(255,255,255,.28);
+      border-radius: 22px;
+      background: rgba(7,27,42,.72);
+      color: var(--cream);
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow);
+      transform: rotate(3deg);
+      font-size: .9rem;
+      line-height: 1.45;
+    }
+    .orbit-note strong { color: var(--sun); }
+
+    .section { padding: clamp(70px, 10vw, 128px) 0; }
+    .section-head { max-width: 760px; margin-bottom: 36px; }
+    .kicker { color: var(--pink); font-weight: 850; letter-spacing: .12em; text-transform: uppercase; font-size: .78rem; }
+    h2 {
+      margin: 10px 0 14px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.3rem, 5vw, 4.5rem);
+      line-height: 1.02;
+      letter-spacing: -.04em;
+      font-weight: 500;
+    }
+    .section-head p { margin: 0; color: rgba(255,249,239,.68); font-size: 1.08rem; line-height: 1.65; }
+
+    .comfort-panel {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr .78fr;
+      gap: 28px;
+      padding: clamp(22px, 4vw, 48px);
+      border-radius: var(--radius);
+      background: var(--cream);
+      color: var(--ink);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .comfort-panel::after {
+      content: "";
+      position: absolute;
+      width: 360px;
+      height: 360px;
+      right: -170px;
+      bottom: -180px;
+      border-radius: 50%;
+      background: var(--mint);
+      opacity: .55;
+    }
+    .tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
+    .note-tab {
+      padding: 11px 16px;
+      border-radius: 999px;
+      background: #eef0e9;
+      color: var(--ink);
+      font-weight: 780;
+    }
+    .note-tab[aria-selected="true"] { background: var(--night); color: var(--cream); box-shadow: 0 8px 20px rgba(7,27,42,.18); }
+    .note-card {
+      min-height: 230px;
+      display: grid;
+      align-content: center;
+      padding: clamp(22px, 4vw, 42px);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(255,255,255,.72);
+    }
+    .note-card.pop { animation: cardIn .45s cubic-bezier(.2,.8,.2,1); }
+    .note-card p { margin: 0; font-family: Georgia, serif; font-size: clamp(1.55rem, 3vw, 2.45rem); line-height: 1.22; letter-spacing: -.025em; }
+    .note-card small { margin-top: 18px; color: var(--pink-deep); font-weight: 800; }
+    .sprout-wrap { display: grid; place-items: center; position: relative; z-index: 2; }
+    .sprout {
+      width: min(280px, 70vw);
+      max-height: 330px;
+      object-fit: contain;
+      filter: drop-shadow(0 20px 25px rgba(32,74,45,.22));
+      animation: nod 4.8s ease-in-out infinite;
+      transform-origin: 50% 90%;
+    }
+    .sprout-label { margin-top: -10px; padding: 9px 14px; border-radius: 99px; background: #dff3d8; font-size: .85rem; font-weight: 800; color: #315d38; }
+
+    .reset-grid { display: grid; grid-template-columns: .92fr 1.08fr; align-items: center; gap: clamp(28px, 7vw, 90px); }
+    .breath-card {
+      min-height: 440px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.055);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      overflow: hidden;
+    }
+    .breath-orb {
+      width: 210px;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 50%;
+      cursor: pointer;
+      color: var(--night);
+      background: radial-gradient(circle at 32% 28%, #fff 0 6%, var(--mint) 38%, #67bd79 100%);
+      box-shadow: 0 0 0 22px rgba(185,237,180,.08), 0 0 65px rgba(185,237,180,.2);
+      font-weight: 900;
+      transition: transform .5s ease;
+    }
+    .breath-orb.breathing { animation: breathe 8s ease-in-out 2; }
+    .breath-orb span { max-width: 120px; text-align: center; line-height: 1.3; }
+    .reset-copy p { color: rgba(255,249,239,.7); font-size: 1.1rem; line-height: 1.7; }
+    .micro-list { display: grid; gap: 12px; margin-top: 26px; }
+    .micro {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.09);
+    }
+    .micro b { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 10px; background: var(--pink); color: var(--night); }
+
+    .closing { min-height: 75vh; display: grid; place-items: center; text-align: center; padding: 110px 0; }
+    .closing-inner { max-width: 860px; }
+    .closing h2 { font-size: clamp(3rem, 7vw, 6.4rem); }
+    .closing p { max-width: 620px; margin: 24px auto 0; color: rgba(255,249,239,.7); font-size: 1.15rem; line-height: 1.7; }
+    .signature { margin-top: 36px; color: var(--sun); font-family: Georgia, serif; font-style: italic; font-size: 1.25rem; }
+    .spark-button { margin-top: 28px; }
+    .spark { position: fixed; z-index: 50; pointer-events: none; font-size: 22px; animation: sparkAway .9s ease-out forwards; }
+
+    footer { padding: 28px 0 36px; text-align: center; color: rgba(255,249,239,.44); font-size: .82rem; }
+
+    @keyframes twinkle { 0%,100% { opacity:.25; transform:scale(.7); } 50% { opacity:1; transform:scale(1.5); } }
+    @keyframes float { 0%,100% { transform: translateY(-8px); } 50% { transform: translateY(10px); } }
+    @keyframes bunnyFloat { 0%,100% { transform: translateY(2px) rotate(-1deg); } 50% { transform: translateY(-15px) rotate(1deg); } }
+    @keyframes nod { 0%,100% { transform: rotate(-2deg); } 50% { transform: rotate(3deg) translateY(-6px); } }
+    @keyframes cardIn { from { opacity:0; transform: translateY(10px) scale(.985); } to { opacity:1; transform:none; } }
+    @keyframes breathe { 0%,100% { transform: scale(.78); box-shadow: 0 0 0 20px rgba(185,237,180,.06); } 50% { transform: scale(1.18); box-shadow: 0 0 0 48px rgba(185,237,180,.08), 0 0 90px rgba(185,237,180,.32); } }
+    @keyframes sparkAway { to { opacity:0; transform: translate(var(--x), var(--y)) rotate(100deg) scale(.4); } }
+
+    @media (max-width: 840px) {
+      .hero { grid-template-columns: 1fr; padding-top: 80px; }
+      .hero-copy { position: relative; z-index: 5; }
+      .scene { min-height: 500px; margin-top: -36px; }
+      .comfort-panel, .reset-grid { grid-template-columns: 1fr; }
+      .sprout-wrap { order: -1; }
+      .sprout { width: 210px; }
+    }
+    @media (max-width: 520px) {
+      main { width: min(100% - 20px, 1160px); }
+      .hero { padding-top: 54px; }
+      h1 { font-size: clamp(3.15rem, 18vw, 5rem); }
+      .scene { min-height: 430px; }
+      .orbit-note { right: 4px; bottom: 46px; width: 160px; }
+      .primary, .ghost { width: 100%; }
+      .tabs { display: grid; grid-template-columns: 1fr 1fr; }
+      .note-tab { padding-inline: 10px; }
+      .breath-card { min-height: 380px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="stars" aria-hidden="true">
+    <i class="star" style="left:8%;top:12%"></i><i class="star" style="left:24%;top:28%"></i>
+    <i class="star" style="left:78%;top:9%"></i><i class="star" style="left:91%;top:38%"></i>
+    <i class="star" style="left:66%;top:69%"></i><i class="star" style="left:14%;top:77%"></i>
+    <i class="star" style="left:43%;top:91%"></i><i class="star" style="left:54%;top:17%"></i>
+  </div>
+
+  <main>
+    <section class="hero" aria-labelledby="hello-airin">
+      <div class="hero-copy">
+        <p class="eyebrow">A pocket of calm, just for you</p>
+        <h1 id="hello-airin">Hey Airin, <span class="soft">you’re not alone.</span></h1>
+        <p class="lede">Whatever today feels like, you do not have to solve it all at once. You are loved on the messy days, the quiet days, and every day in between.</p>
+        <div class="hero-actions">
+          <button class="primary" id="startBreathing">Take one soft breath</button>
+          <button class="ghost" id="jumpNotes">I need a little reminder</button>
+        </div>
+      </div>
+
+      <div class="scene" aria-label="A gentle bunny companion">
+        <div class="moon" aria-hidden="true"></div>
+        <img class="hero-bunny" src="bunny.png" alt="A soft white bunny clip-art standing in warm moonlight" />
+        <p class="orbit-note"><strong>Bunnyy bulletin:</strong><br />You’re doing better than your brain is telling you.</p>
+      </div>
+    </section>
+
+    <section class="section" id="notes" aria-labelledby="notes-title">
+      <div class="section-head">
+        <span class="kicker">Open when…</span>
+        <h2 id="notes-title">Pick what your heart needs.</h2>
+        <p>No fixing. No pressure. Just one true thing at a time.</p>
+      </div>
+
+      <div class="comfort-panel">
+        <div>
+          <div class="tabs" role="tablist" aria-label="Reassurance notes">
+            <button class="note-tab" role="tab" aria-selected="true" data-note="heavy">it feels heavy</button>
+            <button class="note-tab" role="tab" aria-selected="false" data-note="doubt">you doubt yourself</button>
+            <button class="note-tab" role="tab" aria-selected="false" data-note="tired">you’re tired</button>
+            <button class="note-tab" role="tab" aria-selected="false" data-note="tomorrow">tomorrow feels scary</button>
+          </div>
+          <div class="note-card" id="noteCard" role="tabpanel" aria-live="polite">
+            <p id="noteText">You are allowed to put the weight down for a while. Resting is not giving up.</p>
+            <small id="noteSign">Bunnyy and the little green one agree.</small>
+          </div>
+        </div>
+        <div class="sprout-wrap">
+          <img class="sprout" src="sprout.png" alt="Airin’s fuzzy green pocket-sized comfort creature" />
+          <span class="sprout-label">the little green one is on duty</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reset-grid" id="breathe" aria-labelledby="breathe-title">
+      <div class="breath-card">
+        <button class="breath-orb" id="breathOrb" aria-label="Start a sixteen second guided breathing exercise"><span id="breathLabel">Tap to breathe together</span></button>
+      </div>
+      <div class="reset-copy">
+        <span class="kicker">A sixteen-second reset</span>
+        <h2 id="breathe-title">Borrow some calm.</h2>
+        <p>Tap the glow. Let your shoulders fall. Nothing else needs your attention for these few seconds.</p>
+        <div class="micro-list" aria-label="Gentle reset steps">
+          <div class="micro"><b>1</b><span>Unclench your jaw.</span></div>
+          <div class="micro"><b>2</b><span>Let your tongue rest.</span></div>
+          <div class="micro"><b>3</b><span>Make the exhale a little longer.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="closing" aria-labelledby="closing-title">
+      <div class="closing-inner">
+        <span class="kicker">One last thing</span>
+        <h2 id="closing-title">The world is softer with you in it, Airin.</h2>
+        <p>You don’t need to be cheerful, productive, or certain to deserve care. Just be here. That is already enough for today.</p>
+        <button class="primary spark-button" id="sendSpark">Send yourself a tiny hug</button>
+        <div class="signature">Always in your corner.</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>Made with soft thoughts for Airin.</footer>
+
+  <script>
+    const notes = {
+      heavy: ["You are allowed to put the weight down for a while. Resting is not giving up.", "Bunnyy and the little green one agree."],
+      doubt: ["A hard moment cannot erase all the brave things you have already done. You are still you.", "Evidence: every day you kept going."],
+      tired: ["You do not have to earn rest. Your softness is not a weakness, and your limits are not a failure.", "Consider this permission granted."],
+      tomorrow: ["You only need to meet tomorrow when it arrives. Tonight, your only job is to be gentle with yourself.", "Future Airin will take it from there."]
+    };
+
+    const tabs = [...document.querySelectorAll('.note-tab')];
+    const noteCard = document.getElementById('noteCard');
+    const noteText = document.getElementById('noteText');
+    const noteSign = document.getElementById('noteSign');
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => showNote(tab));
+      tab.addEventListener('keydown', (event) => {
+        if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+        event.preventDefault();
+        const direction = event.key === 'ArrowRight' ? 1 : -1;
+        const next = tabs[(index + direction + tabs.length) % tabs.length];
+        next.focus();
+        showNote(next);
+      });
+    });
+
+    function showNote(tab) {
+      tabs.forEach(item => item.setAttribute('aria-selected', String(item === tab)));
+      const [message, sign] = notes[tab.dataset.note];
+      noteText.textContent = message;
+      noteSign.textContent = sign;
+      noteCard.classList.remove('pop');
+      requestAnimationFrame(() => noteCard.classList.add('pop'));
+    }
+
+    const orb = document.getElementById('breathOrb');
+    const label = document.getElementById('breathLabel');
+    let breathing = false;
+
+    function startBreathing() {
+      if (breathing) return;
+      breathing = true;
+      document.getElementById('breathe').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      orb.classList.remove('breathing');
+      void orb.offsetWidth;
+      orb.classList.add('breathing');
+      const phases = [
+        [0, 'Breathe in…'], [4000, 'Breathe out…'],
+        [8000, 'Breathe in…'], [12000, 'Breathe out…'],
+        [16000, 'You did it.']
+      ];
+      phases.forEach(([delay, text]) => setTimeout(() => { label.textContent = text; }, delay));
+      setTimeout(() => { breathing = false; orb.classList.remove('breathing'); }, 17400);
+    }
+
+    orb.addEventListener('click', startBreathing);
+    document.getElementById('startBreathing').addEventListener('click', startBreathing);
+    document.getElementById('jumpNotes').addEventListener('click', () => document.getElementById('notes').scrollIntoView({ behavior: 'smooth' }));
+
+    document.getElementById('sendSpark').addEventListener('click', (event) => {
+      const icons = ['✦', '♥', '✧', '•'];
+      const box = event.currentTarget.getBoundingClientRect();
+      for (let i = 0; i < 22; i++) {
+        const spark = document.createElement('span');
+        spark.className = 'spark';
+        spark.textContent = icons[i % icons.length];
+        spark.style.left = `${box.left + box.width / 2}px`;
+        spark.style.top = `${box.top + box.height / 2}px`;
+        spark.style.color = i % 2 ? '#ffe189' : '#ff91a8';
+        spark.style.setProperty('--x', `${(Math.random() - .5) * 260}px`);
+        spark.style.setProperty('--y', `${-40 - Math.random() * 190}px`);
+        document.body.appendChild(spark);
+        setTimeout(() => spark.remove(), 1000);
+      }
+      event.currentTarget.textContent = 'Hug delivered ♡';
+    });
+  </script>
+</body>
+</html>
