@@ -338,7 +338,7 @@
         <h1 id="hello-airin">Hey Airin, <span class="soft">you’re not alone.</span></h1>
         <p class="lede">Whatever today feels like, you do not have to solve it all at once. You are loved on the messy days, the quiet days, and every day in between.</p>
         <div class="hero-actions">
-          <button class="primary" id="startBreathing">Take one soft breath</button>
+          <button class="primary" id="startBreathing">Start breathing</button>
           <button class="ghost" id="jumpNotes">I need a little reminder</button>
         </div>
       </div>
@@ -379,7 +379,7 @@
 
     <section class="section reset-grid" id="breathe" aria-labelledby="breathe-title">
       <div class="breath-card">
-        <button class="breath-orb" id="breathOrb" aria-label="Start a sixteen second guided breathing exercise"><span id="breathLabel">Tap to breathe together</span></button>
+        <button class="breath-orb" id="breathOrb" aria-label="Click to start a sixteen second guided breathing exercise"><span id="breathLabel">Click to start breathing</span></button>
       </div>
       <div class="reset-copy">
         <span class="kicker">A sixteen-second reset</span>
@@ -398,8 +398,8 @@
         <span class="kicker">One last thing</span>
         <h2 id="closing-title">The world is softer with you in it, Airin.</h2>
         <p>You don’t need to be cheerful, productive, or certain to deserve care. Just be here. That is already enough for today.</p>
-        <button class="primary spark-button" id="sendSpark">Send yourself a tiny hug</button>
-        <div class="signature">Always in your corner.</div>
+        <button class="primary spark-button" id="sendSpark">Send a virtual hug from Irfan</button>
+        <div class="signature">I love you, Airin. — Irfan</div>
       </div>
     </section>
   </main>
@@ -454,7 +454,7 @@
       const phases = [
         [0, 'Breathe in…'], [4000, 'Breathe out…'],
         [8000, 'Breathe in…'], [12000, 'Breathe out…'],
-        [16000, 'You did it.']
+        [16000, 'You did it — click to breathe again.']
       ];
       phases.forEach(([delay, text]) => setTimeout(() => { label.textContent = text; }, delay));
       setTimeout(() => { breathing = false; orb.classList.remove('breathing'); }, 17400);
@@ -479,7 +479,7 @@
         document.body.appendChild(spark);
         setTimeout(() => spark.remove(), 1000);
       }
-      event.currentTarget.textContent = 'Hug delivered ♡';
+      event.currentTarget.textContent = 'Virtual hug from Irfan delivered ♡';
     });
   </script>
 </body>
